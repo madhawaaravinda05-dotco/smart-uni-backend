@@ -9,5 +9,6 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/smart-uni-backend-0.0.1-SNAPSHOT.jar app.jar
+ENV PORT=7860
 EXPOSE 7860
 ENTRYPOINT ["java", "-jar", "app.jar"]
