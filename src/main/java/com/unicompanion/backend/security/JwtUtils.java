@@ -47,8 +47,8 @@ public class JwtUtils {
                 .path("/api")
                 .maxAge(24 * 60 * 60)
                 .httpOnly(true)
-                .secure(false) // Set to true in production if using HTTPS
-                .sameSite("Lax") // Helps with CORS in development
+                .secure(true) // Required for cross-domain cookies
+                .sameSite("None") // Required for cross-domain cookies (Vercel -> HuggingFace)
                 .build();
         return cookie;
     }
@@ -58,6 +58,8 @@ public class JwtUtils {
                 .path("/api")
                 .maxAge(0)
                 .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
                 .build();
         return cookie;
     }
