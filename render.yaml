@@ -1,0 +1,14 @@
+# Smart UniCompanion Backend - Render Deployment Config
+# This file tells Render how to build and run your backend
+
+services:
+  - type: web
+    name: smart-uni-backend
+    runtime: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/smart-uni-backend-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: MONGODB_URI
+        sync: false       # You will set this manually in Render dashboard
+      - key: JWT_SECRET
+        sync: false       # You will set this manually in Render dashboard
