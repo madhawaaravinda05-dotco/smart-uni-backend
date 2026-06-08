@@ -15,6 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.unicompanion.backend.service.FileStorageService;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +37,23 @@ public class PostController {
 
     @Autowired
     ReviewRepository reviewRepository;
+
+    @Autowired
+    FileStorageService fileStorageService;
+
+    @PostMapping("/upload-images")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('MASTER_ADMIN')")
+    public ResponseEntity<?> uploadPostImages(@RequestParam("images") MultipartFile[] images) {
+        try {
+            java.util.List<String> fileUrls = new java.util.ArrayList<>();
+            for (MultipartFile file : images) {
+                fileUrls.add(fileStorageService.storeFile(file));
+            }
+            return ResponseEntity.ok(fileUrls);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error uploading images: " + e.getMessage()));
+        }
+    }
 
     @GetMapping("/active/{university}")
     public ResponseEntity<?> getActivePosts(@PathVariable String university,

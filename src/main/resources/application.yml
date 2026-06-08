@@ -15,3 +15,5 @@ app:
   jwtSecret: ${JWT_SECRET:9d72b217a11d8c1c24fa2eb8f7e8a94b5e61d3f54d7e9b8f217c91a3e8b4e7a8}
   jwtExpirationMs: 86400000 # 24 hours
   uploadDir: uploads/
+  imgbb:
+    key: ${IMGBB_API_KEY:}
