@@ -24,14 +24,6 @@ public class SessionController {
     @Autowired
     UserRepository userRepository;
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser() {
-        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new MessageResponse("You've been signed out successfully!"));
-    }
-
     @GetMapping("/check")
     public ResponseEntity<?> checkSession() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
