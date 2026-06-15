@@ -107,22 +107,7 @@ public class PostController {
         return ResponseEntity.ok(new MessageResponse("Status updated to " + request.getStatus()));
     }
 
-    @PostMapping("/{id}/report")
-    public ResponseEntity<?> reportPost(@PathVariable String id) {
-        Optional<Post> postOpt = postRepository.findById(id);
-        if (postOpt.isEmpty()) return ResponseEntity.badRequest().body(new MessageResponse("Post not found"));
 
-        Post post = postOpt.get();
-        int count = post.getReportCount() == null ? 0 : post.getReportCount();
-        post.setReportCount(count + 1);
-
-        if (post.getReportCount() >= 5) {
-            post.setStatus("PENDING"); // Auto hide
-        }
-        postRepository.save(post);
-
-        return ResponseEntity.ok(new MessageResponse("Post reported successfully"));
-    }
 
     @PostMapping("/{postId}/reviews")
     public ResponseEntity<?> addReview(@PathVariable String postId, @RequestBody ReviewRequest reviewRequest) {
