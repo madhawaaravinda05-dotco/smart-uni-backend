@@ -47,6 +47,8 @@ public class Post {
     private String routeNumber;
     private String fromLocation;
     private String toLocation;
+    private String frequency;
+    private String lastBus;
 
     private Integer reportCount; // auto hide after 5
 
@@ -100,6 +102,10 @@ public class Post {
     public void setFromLocation(String fromLocation) { this.fromLocation = fromLocation; }
     public String getToLocation() { return toLocation; }
     public void setToLocation(String toLocation) { this.toLocation = toLocation; }
+    public String getFrequency() { return frequency; }
+    public void setFrequency(String frequency) { this.frequency = frequency; }
+    public String getLastBus() { return lastBus; }
+    public void setLastBus(String lastBus) { this.lastBus = lastBus; }
     public Integer getReportCount() { return reportCount; }
     public void setReportCount(Integer reportCount) { this.reportCount = reportCount; }
 }
