@@ -81,7 +81,12 @@ public class AdminRequestController {
         Optional<AdminRequest> requestOpt = adminRequestRepository.findByUser(userOpt.get());
         Map<String, String> response = new HashMap<>();
         if (requestOpt.isPresent()) {
-            response.put("status", requestOpt.get().getStatus());
+            if (requestOpt.get().getStatus().equals("APPROVED") && "ROLE_STUDENT".equals(userOpt.get().getRole())) {
+                adminRequestRepository.delete(requestOpt.get());
+                response.put("status", "NONE");
+            } else {
+                response.put("status", requestOpt.get().getStatus());
+            }
         } else {
             response.put("status", "NONE");
         }

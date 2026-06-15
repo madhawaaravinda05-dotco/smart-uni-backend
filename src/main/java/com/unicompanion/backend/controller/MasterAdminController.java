@@ -2,7 +2,9 @@ package com.unicompanion.backend.controller;
 
 import com.unicompanion.backend.dto.MessageResponse;
 import com.unicompanion.backend.model.Post;
+import com.unicompanion.backend.model.AdminRequest;
 import com.unicompanion.backend.model.User;
+import com.unicompanion.backend.repository.AdminRequestRepository;
 import com.unicompanion.backend.repository.PostRepository;
 import com.unicompanion.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class MasterAdminController {
     @Autowired
     PostRepository postRepository;
 
+    @Autowired
+    AdminRequestRepository adminRequestRepository;
+
     @GetMapping
     public ResponseEntity<?> getActiveAdmins() {
         List<User> admins = userRepository.findByRole("ROLE_ADMIN");
@@ -49,6 +54,9 @@ public class MasterAdminController {
         user.setRole("ROLE_STUDENT");
         userRepository.save(user);
 
+        Optional<AdminRequest> adminRequestOpt = adminRequestRepository.findByUser(user);
+        adminRequestOpt.ifPresent(adminRequest -> adminRequestRepository.delete(adminRequest));
+
         return ResponseEntity.ok(new MessageResponse("Admin successfully downgraded to student."));
     }
 
@@ -63,6 +71,9 @@ public class MasterAdminController {
         if (!"ROLE_ADMIN".equals(user.getRole())) {
             return ResponseEntity.badRequest().body(new MessageResponse("User is not a university admin"));
         }
+
+        Optional<AdminRequest> adminRequestOpt = adminRequestRepository.findByUser(user);
+        adminRequestOpt.ifPresent(adminRequest -> adminRequestRepository.delete(adminRequest));
 
         userRepository.delete(user);
 
