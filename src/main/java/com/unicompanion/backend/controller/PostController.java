@@ -89,7 +89,7 @@ public class PostController {
         // Enforce pricing tier (max 2 free Boarding or Food posts)
         boolean isBoardingOrFood = "BOARDING".equalsIgnoreCase(postRequest.getCategory()) || "FOOD".equalsIgnoreCase(postRequest.getCategory());
         if (isBoardingOrFood && !postRequest.isPremium()) {
-            long existingCount = postRepository.findByPostedBy(user).stream()
+            long existingCount = postRepository.findByPostedById(user.getId()).stream()
                 .filter(p -> "BOARDING".equalsIgnoreCase(p.getCategory()) || "FOOD".equalsIgnoreCase(p.getCategory()))
                 .count();
             if (existingCount >= 2) {

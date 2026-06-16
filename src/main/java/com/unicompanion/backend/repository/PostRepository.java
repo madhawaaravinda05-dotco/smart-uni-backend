@@ -13,5 +13,5 @@ public interface PostRepository extends MongoRepository<Post, String> {
     @org.springframework.data.mongodb.repository.Query("{ 'university': ?0, 'status': ?1, 'category': { $regex: ?2, $options: 'i' } }")
     List<Post> findByUniversityAndStatusAndCategory(String university, String status, String category);
 
-    List<Post> findByPostedBy(com.unicompanion.backend.model.User user);
+    List<Post> findByPostedById(String id);
 }
