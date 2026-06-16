@@ -83,8 +83,21 @@ public class PostController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Optional<User> userOpt = userRepository.findByEmail(auth.getName());
         if (!userOpt.isPresent()) return ResponseEntity.badRequest().body(new MessageResponse("User not found"));
+        
+        User user = userOpt.get();
 
-        postRequest.setPostedBy(userOpt.get());
+        // Enforce pricing tier (max 2 free Boarding or Food posts)
+        boolean isBoardingOrFood = "BOARDING".equalsIgnoreCase(postRequest.getCategory()) || "FOOD".equalsIgnoreCase(postRequest.getCategory());
+        if (isBoardingOrFood && !postRequest.isPremium()) {
+            long existingCount = postRepository.findByPostedBy(user).stream()
+                .filter(p -> "BOARDING".equalsIgnoreCase(p.getCategory()) || "FOOD".equalsIgnoreCase(p.getCategory()))
+                .count();
+            if (existingCount >= 2) {
+                return ResponseEntity.status(403).body(new MessageResponse("PAYMENT_REQUIRED"));
+            }
+        }
+
+        postRequest.setPostedBy(user);
         postRequest.setStatus("PENDING");
         postRequest.setCreatedAt(Instant.now());
         postRequest.setReportCount(0);

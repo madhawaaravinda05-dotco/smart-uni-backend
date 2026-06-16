@@ -51,6 +51,8 @@ public class Post {
     private String lastBus;
 
     private Integer reportCount; // auto hide after 5
+    
+    private boolean premium;
 
     public Post() {}
 
@@ -108,4 +110,6 @@ public class Post {
     public void setLastBus(String lastBus) { this.lastBus = lastBus; }
     public Integer getReportCount() { return reportCount; }
     public void setReportCount(Integer reportCount) { this.reportCount = reportCount; }
+    public boolean isPremium() { return premium; }
+    public void setPremium(boolean premium) { this.premium = premium; }
 }
