@@ -38,6 +38,8 @@ public class User {
 
     private Boolean isApprovedByMaster; // true if admin request approved, default true for students
 
+    private Integer freePostsUsed = 0; // Tracks lifetime free Boarding/Food posts
+
     public User() {}
 
     public String getId() { return id; }
@@ -58,4 +60,6 @@ public class User {
     public void setYearOfStudy(Integer yearOfStudy) { this.yearOfStudy = yearOfStudy; }
     public Boolean getIsApprovedByMaster() { return isApprovedByMaster; }
     public void setIsApprovedByMaster(Boolean isApprovedByMaster) { this.isApprovedByMaster = isApprovedByMaster; }
+    public Integer getFreePostsUsed() { return freePostsUsed; }
+    public void setFreePostsUsed(Integer freePostsUsed) { this.freePostsUsed = freePostsUsed; }
 }

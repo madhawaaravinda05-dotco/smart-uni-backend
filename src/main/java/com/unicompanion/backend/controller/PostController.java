@@ -86,14 +86,27 @@ public class PostController {
         
         User user = userOpt.get();
 
-        // Enforce pricing tier (max 2 free Boarding or Food posts)
+        // Enforce pricing tier (max 2 free Boarding or Food posts lifetime)
         boolean isBoardingOrFood = "BOARDING".equalsIgnoreCase(postRequest.getCategory()) || "FOOD".equalsIgnoreCase(postRequest.getCategory());
         if (isBoardingOrFood && !postRequest.isPremium()) {
-            long existingCount = postRepository.findByPostedById(user.getId()).stream()
-                .filter(p -> "BOARDING".equalsIgnoreCase(p.getCategory()) || "FOOD".equalsIgnoreCase(p.getCategory()))
-                .count();
-            if (existingCount >= 2) {
+            int used = user.getFreePostsUsed() != null ? user.getFreePostsUsed() : 0;
+            
+            // Auto-initialize for older users who don't have the counter set yet
+            if (used == 0 && user.getFreePostsUsed() == null) {
+                long existingCount = postRepository.findByPostedById(user.getId()).stream()
+                    .filter(p -> "BOARDING".equalsIgnoreCase(p.getCategory()) || "FOOD".equalsIgnoreCase(p.getCategory()))
+                    .count();
+                used = (int) existingCount;
+                user.setFreePostsUsed(used);
+                userRepository.save(user);
+            }
+            
+            if (used >= 2) {
                 return ResponseEntity.status(403).body(new MessageResponse("PAYMENT_REQUIRED"));
+            } else {
+                // Increment free post usage
+                user.setFreePostsUsed(used + 1);
+                userRepository.save(user);
             }
         }
 
